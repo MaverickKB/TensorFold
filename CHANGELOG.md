@@ -4,6 +4,8 @@ Each release's page on GitHub has its notes and measurements. See [the 1.0.0 rel
 
 ## Unreleased
 
+- DeepSeek-V4.1's pack weight-span reads bypass the page cache with O_DIRECT where the file system supports it (`TF_LOAD_DIRECT=0` keeps buffered reads); pack hashing and prepared-image reads still use the cache (#1924, part of #1857).
+
 - Server: control bytes in a request line (C0, DEL and C1) appear in the access log as `\xNN`, so a request cannot write terminal escapes into the log; ordinary lines are unchanged (#2542). Thanks to @chadhurley25075-png.
 
 - Conversation states on disk (`--learn-conversations`): a row block or state file whose trailer sizes add up to the file only by wrapping past 2^64 is refused at open, where a safe build used to panic on the addition (#2544). Thanks to @chadhurley25075-png.
@@ -785,7 +787,6 @@ Each release's page on GitHub has its notes and measurements. See [the 1.0.0 rel
 - DeepSeek V4.1 packs refuse a shard whose header length runs past its file or past 100 MB before anything is allocated, instead of allocating up to 1 GiB first (#1903, part of #1872). Thanks to @jschmied.
 
 - EAQ containers refuse a shard whose header length runs past its file or past 100 MB before anything is allocated (#1902, part of #1872). Thanks to @jschmied.
-- DeepSeek-V4.1 reads its pack's weight spans past the page cache with O_DIRECT, so a load no longer fills the cache first (`TF_LOAD_DIRECT=0` keeps buffered reads; part of #1857).
 
 - With `TF_NEMOTRON_METAL_KV_PAGES=1`, Nemotron on Metal takes KV pages as a reply grows instead of for its whole context at the start, so a short chat holds 1 page instead of 17. It is off by default (#1837, part of #1293). Thanks to @jschmied.
 
